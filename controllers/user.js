@@ -229,11 +229,10 @@ exports.emptyCart = async (req, res) => {
 
 exports.saveAddress = async (req, res) => {
   try {
-    //req.user.id
-    const { address } = req.body;
-    const addressUser = await prisma.user.update({
+    const { address, orderId } = req.body;
+    const addressOrder = await prisma.order.update({
       where: {
-        id: Number(req.user.id),
+        id: Number(orderId),
       },
       data: {
         address: address,
@@ -375,7 +374,8 @@ exports.getOrder = async (req, res) => {
 exports.updateUserProfile = async (req, res) => {
   try {
     const { name } = req.body; // รับค่า name จาก body
-    const { id } = req.user; 
+    const { address } = req.body;
+    const { id } = req.user;
 
     // ตรวจสอบว่าผู้ใช้มีอยู่หรือไม่
     const user = await prisma.user.findUnique({
@@ -395,12 +395,14 @@ exports.updateUserProfile = async (req, res) => {
       },
       data: {
         name: name || user.name, // ใช้ค่าที่ส่งมา หรือค่าชื่อเดิมหากไม่มีการส่งมา
+        address: address,
       },
     });
 
     res.json({
       id: updatedUser.id,
       name: updatedUser.name,
+      address: updatedUser.address,
       message: "Profile updated successfully",
     });
   } catch (error) {

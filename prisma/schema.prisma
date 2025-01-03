@@ -56,6 +56,7 @@ model order {
   stripePaymentId String?
   amount          Int
   currentcy       String
+  address         String?
   status          String
   created         DateTime         @default(now())
   updated         DateTime         @updatedAt
